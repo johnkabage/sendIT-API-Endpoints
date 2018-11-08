@@ -70,4 +70,4 @@ $ flask run
 
 ### Author
 
-Jaohn Mburu
+John Mburu
