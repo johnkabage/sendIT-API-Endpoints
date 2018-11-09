@@ -1,5 +1,6 @@
 ![license](https://img.shields.io/github/license/mashape/apistatus.svg)
 [![Build Status](https://travis-ci.org/johnz99/sendIT-API-Endpoints.svg?branch=challenge-2-develop)](https://travis-ci.org/johnz99/sendIT-API-Endpoints)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2b1910842a1a4b4886fd198b4192c538)](https://www.codacy.com/app/johnz99/sendIT-API-Endpoints?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=johnz99/sendIT-API-Endpoints&amp;utm_campaign=Badge_Grade)
 
 # sendIT-API-Endpoints
 
