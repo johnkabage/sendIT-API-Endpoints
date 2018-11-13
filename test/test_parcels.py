@@ -44,18 +44,6 @@ class TestParcels(TestCase):
 
         return response
 
-    def get_user_token(self):
-        '''
-        Get token function
-        '''
-
-        self.signup()
-        response = self.login()
-        token = json.loads(response.data).get('token', None)
-
-        return token
-
-
     def test_signup(self):
         '''
         Test user signup
@@ -72,16 +60,6 @@ class TestParcels(TestCase):
         response = self.login()
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.data)['message'],"successfully logged in as john")
-
-
-    def test_user_get_token(self):
-        '''
-        Test a user gets a token after login
-        '''
-        self.signup()
-        response = self.login()
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('token', json.loads(response.data))
 
     def test_invalid_username(self):
         '''
@@ -140,7 +118,7 @@ class TestParcels(TestCase):
         self.assertEquals(response.status_code, 401)
         self.assertEquals(json.loads(response.data)['message'], "Enter a valid password")
 
-    def test_invalid_confir_password(self):
+    def test_invalid_confirm_password(self):
         '''
         test for confirm password
         '''
@@ -195,8 +173,8 @@ class TestParcels(TestCase):
         '''
         function to create a parcel
         '''
-        token = self.get_user_token()
         parcel_cred = {
+            "sender":"john",
             "_from":'thka',
             "destination":"ruiru",
             "weight":10,
@@ -207,8 +185,7 @@ class TestParcels(TestCase):
             "/api/v1/parcels",
             data=json.dumps(parcel_cred),
             headers={
-                'content-type': 'application/json',
-                'Authorization': f'Bearer {token}'
+                'content-type': 'application/json'
              }
         )
 
@@ -226,8 +203,8 @@ class TestParcels(TestCase):
         '''
         test invalid from
         '''
-        token = self.get_user_token()
         parcel_cred = {
+            "sender":"john",
             "_from":'$%$$%%',
             "destination":"ruiru",
             "weight":10,
@@ -238,8 +215,7 @@ class TestParcels(TestCase):
             "/api/v1/parcels",
             data=json.dumps(parcel_cred),
             headers={
-                'content-type': 'application/json',
-                'Authorization': f'Bearer {token}'
+                'content-type': 'application/json'
              }
         )
         self.assertEquals(response.status_code, 401)
@@ -249,8 +225,8 @@ class TestParcels(TestCase):
         '''
         test invalid destination
         '''
-        token = self.get_user_token()
         parcel_cred = {
+            "sender":"john",
             "_from":'thika',
             "destination":"#$$%^$",
             "weight":10,
@@ -261,8 +237,7 @@ class TestParcels(TestCase):
             "/api/v1/parcels",
             data=json.dumps(parcel_cred),
             headers={
-                'content-type': 'application/json',
-                'Authorization': f'Bearer {token}'
+                'content-type': 'application/json'
              }
         )
         self.assertEquals(response.status_code, 401)
@@ -272,8 +247,8 @@ class TestParcels(TestCase):
         '''
         test invalid parcel name
         '''
-        token = self.get_user_token()
         parcel_cred = {
+            "sender":"john",
             "_from":'thika',
             "destination":"juja",
             "weight":10,
@@ -284,8 +259,7 @@ class TestParcels(TestCase):
             "/api/v1/parcels",
             data=json.dumps(parcel_cred),
             headers={
-                'content-type': 'application/json',
-                'Authorization': f'Bearer {token}'
+                'content-type': 'application/json'
              }
         )
         self.assertEquals(response.status_code, 401)
@@ -295,8 +269,8 @@ class TestParcels(TestCase):
         '''
         test invalid recipient
         '''
-        token = self.get_user_token()
         parcel_cred = {
+            "sender":"john",
             "_from":'thika',
             "destination":"juja",
             "weight":10,
@@ -307,8 +281,7 @@ class TestParcels(TestCase):
             "/api/v1/parcels",
             data=json.dumps(parcel_cred),
             headers={
-                'content-type': 'application/json',
-                'Authorization': f'Bearer {token}'
+                'content-type': 'application/json'
              }
         )
         self.assertEquals(response.status_code, 401)
@@ -319,8 +292,8 @@ class TestParcels(TestCase):
         '''
         test invalid weight
         '''
-        token = self.get_user_token()
         parcel_cred = {
+            "sender":"john",
             "_from":'thika',
             "destination":"juja",
             "weight":'hasdfg',
@@ -331,8 +304,7 @@ class TestParcels(TestCase):
             "/api/v1/parcels",
             data=json.dumps(parcel_cred),
             headers={
-                'content-type': 'application/json',
-                'Authorization': f'Bearer {token}'
+                'content-type': 'application/json'
              }
         )
 
@@ -343,14 +315,10 @@ class TestParcels(TestCase):
         '''
         test get all parcels
         '''
-        token = self.get_user_token()
         self.create_parcel()
 
         response = self.client.get(
-            "/api/v1/parcels",
-            headers={
-                'Authorization': f'Bearer {token}'
-             }
+            "/api/v1/parcels"
         )
 
         self.assertEquals(response.status_code, 200)
@@ -359,14 +327,10 @@ class TestParcels(TestCase):
         '''
         test get specific parcel
         '''
-        token = self.get_user_token()
         self.create_parcel()
 
         response = self.client.get(
-            "/api/v1/parcels/1",
-            headers={
-                'Authorization': f'Bearer {token}'
-             }
+            "/api/v1/parcels/1"
         )
 
         self.assertEquals(response.status_code, 200)
@@ -375,14 +339,10 @@ class TestParcels(TestCase):
         '''
         test get non existing parcel
         '''
-        token = self.get_user_token()
         self.create_parcel()
 
         response = self.client.get(
-            "/api/v1/parcels/100000",
-            headers={
-                'Authorization': f'Bearer {token}'
-             }
+            "/api/v1/parcels/100000"
         )
 
         self.assertEquals(response.status_code, 404)
@@ -392,14 +352,10 @@ class TestParcels(TestCase):
         '''
         test cancel order
         '''
-        token = self.get_user_token()
         self.create_parcel()
 
         response = self.client.put(
-            "/api/v1/parcels/1/cancel",
-            headers={
-                'Authorization': f'Bearer {token}'
-             }
+            "/api/v1/parcels/1/cancel"
         )
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.data)['message'], 'parcel cancelled successfully')
@@ -408,13 +364,9 @@ class TestParcels(TestCase):
         '''
         test get all users
         '''
-        token = self.get_user_token()
-
+        self.signup()
         response = self.client.get(
-            "/api/v1/users",
-            headers={
-                'Authorization': f'Bearer {token}'
-             }
+            "/api/v1/users"
         )
         self.assertEquals(response.status_code, 200)
 
@@ -422,12 +374,8 @@ class TestParcels(TestCase):
         '''
         test get specific user parcels
         '''
-        token = self.get_user_token()
         response = self.client.get(
-            "/api/v1/users/1/parcels",
-            headers={
-                'Authorization': f'Bearer {token}'
-             }
+            "/api/v1/users/1/parcels"
         )
         self.assertEquals(response.status_code, 200)
 
@@ -435,12 +383,8 @@ class TestParcels(TestCase):
         '''
         test a non existing user
         '''
-        token = self.get_user_token()
         response = self.client.get(
-            "/api/v1/users/1000/parcels",
-            headers={
-                'Authorization': f'Bearer {token}'
-             }
+            "/api/v1/users/1000/parcels"
         )
         self.assertEquals(response.status_code, 404)
         self.assertEquals(json.loads(response.data)['message'], 'User not found')
