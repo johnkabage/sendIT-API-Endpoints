@@ -66,6 +66,7 @@ $ flask run
 | GET    | /api/v1/users            | get all users                       |
 | GET    | /api/v1/users/1/parcels  | get all parcels for a specific user |
 
+
 ### post a parcel delivery order
 
     {
@@ -76,6 +77,7 @@ $ flask run
     "parcel":"Combs",
     "recipient":"Alice"
     }
+
 
 ### Testing
 
