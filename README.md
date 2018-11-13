@@ -58,13 +58,24 @@ $ flask run
 | ------ | ------------------------ | ----------------------------------- |
 | POST   | /api/v1/auth/signup      | sign up a user                      |
 | POST   | /api/v1/auth/login       | login a user                        |
-| POST   | /api/v1/parcels          | create a parcele                    |
+| POST   | /api/v1/parcels          | create a parcel                     |
 | GET    | /api/v1/parcels          | get all parcels                     |
 | GET    | /api/v1/parcels/1        | get a specific parcel               |
 | DEL    | /api/v1/parcels/1        | delete a specific parcel            |
 | PUT    | /api/v1/parcels/1/cancel | cancel a specific parcel            |
 | GET    | /api/v1/users            | get all users                       |
 | GET    | /api/v1/users/1/parcels  | get all parcels for a specific user |
+
+### post a parcel delivery order
+
+    {
+    "sender":"kimww1",
+    "_from":"qwert",
+    "destination":"Nyeri",
+    "weight":1,
+    "parcel":"Combs",
+    "recipient":"Alice"
+    }
 
 ### Testing
 
