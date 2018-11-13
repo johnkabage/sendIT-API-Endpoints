@@ -24,8 +24,8 @@ class ParcelOrder:
                 return parcel
 
     def get_parcels_by_sender(self, sender):
-        pacels_sender = [parcel for parcel in parcels_store if parcel.sender == sender]
-        return pacels_sender
+        parcels_sender = [parcel for parcel in parcels_store if parcel.sender == sender]
+        return parcels_sender
 
 class User:
     user_id = 1

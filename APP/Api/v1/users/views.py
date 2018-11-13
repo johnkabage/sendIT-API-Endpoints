@@ -1,6 +1,5 @@
 from flask import request
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required
 from ..models import User, ParcelOrder, users_store
 
 class GetAllUsers(Resource):
@@ -19,10 +18,8 @@ class GetAllUsers(Resource):
             'all Users':users
         }, 200
 
-
 class SpecificUserParcels(Resource):
 
-    @jwt_required
     def get(self, userId):
         '''
         Get all parcels from a specific user
@@ -39,4 +36,5 @@ class SpecificUserParcels(Resource):
         return {
             f"parcels for {user.username}":all_parcels
         }, 200
+
 

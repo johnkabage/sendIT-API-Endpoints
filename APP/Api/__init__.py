@@ -1,19 +1,15 @@
 from flask import Flask
 from flask_restful import Api
-from flask_jwt_extended import JWTManager
 from ..instance.config import app_config
 from .v1.auth.views import Login, SignUp
 from .v1.orders.views import Parcel, GetParcel, CancelParcelOrder
 from .v1.users.views import GetAllUsers, SpecificUserParcels
 
-jwt = JWTManager()
 
 def create_app(config_mode):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_mode])
     app.config.from_pyfile('config.py')
-
-    jwt.init_app(app)
 
     from .v1.auth import auth_blueprint as auth_bp
     auth = Api(auth_bp)

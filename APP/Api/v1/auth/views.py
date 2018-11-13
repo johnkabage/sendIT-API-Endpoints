@@ -1,6 +1,5 @@
 from flask import request
 from flask_restful import Resource
-from flask_jwt_extended import create_access_token
 from werkzeug.security import check_password_hash
 from ..models import User, users_store
 from validators.validators import Validators
@@ -75,9 +74,6 @@ class Login(Resource):
                 'message':'Invalid password, enter the correct password'
             }, 401
 
-        token = create_access_token(identity=user.__dict__)
-
         return {
-            'token':token,
             'message':f'successfully logged in as {user.username}'
         }
