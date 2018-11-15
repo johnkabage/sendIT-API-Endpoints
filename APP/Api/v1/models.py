@@ -5,7 +5,7 @@ parcels_store = []
 
 class ParcelOrder:
     parcel_id = 1
-    def __init__(self,sender=None, _from = None,destination = None,weight = None, parcel = None, recipient = None, price=None):
+    def __init__(self,sender = None, _from = None,destination = None,weight = None, parcel = None, recipient = None, price=None):
         self.sender = sender
         self._from = _from
         self.destination = destination
