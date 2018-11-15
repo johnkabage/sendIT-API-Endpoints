@@ -1,15 +1,26 @@
 from flask import request
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 from werkzeug.security import check_password_hash
 from ..models import User, users_store
 from validators.validators import Validators
 
 class SignUp(Resource):
+
+    parser = reqparse.RequestParser()
+    parser.add_argument('username', type=str, required=True,
+                        help='This field cannot be left blank')
+    parser.add_argument('email', type=str, required=True,
+                        help='This field cannot be left blank')
+    parser.add_argument('password', type=str, required=True,
+                        help='This field cannot be left blank')
+    parser.add_argument('confirm_password', type=str, required=True,
+                        help='This field cannot be left blank')
+
     def post(self):
         '''
         user can signup
         '''
-        request_data = request.get_json()
+        request_data = SignUp.parser.parse_args()
         username = request_data['username']
         email = request_data['email']
         password = request_data['password']
@@ -44,11 +55,18 @@ class SignUp(Resource):
         }, 201
 
 class Login(Resource):
+
+    parser = reqparse.RequestParser()
+
+    parser.add_argument('username', type=str, required=True,
+                        help='This field cannot be left blank')
+    parser.add_argument('password', type=str, required=True,
+                        help='This field cannot be left blank')
     def post(self):
         '''
         user can login
         '''
-        request_data = request.get_json()
+        request_data = Login.parser.parse_args()
 
         username = request_data['username']
         password = request_data['password']
