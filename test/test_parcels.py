@@ -167,7 +167,8 @@ class TestParcels(TestCase):
             headers={'content-type': 'application/json'}
         )
         self.assertEquals(response.status_code, 401)
-        self.assertEquals(json.loads(response.data)['message'], "Invalid password, enter the correct password")
+        self.assertEquals(json.loads(response.data)['message'],
+        "Invalid password, enter the correct password")
 
     def create_parcel(self):
         '''
@@ -201,7 +202,7 @@ class TestParcels(TestCase):
 
     def test_Invalid_from(self):
         '''
-        test invalid from
+        test invalid from location
         '''
         parcel_cred = {
             "sender":"john",
@@ -219,11 +220,11 @@ class TestParcels(TestCase):
              }
         )
         self.assertEquals(response.status_code, 401)
-        self.assertEquals(json.loads(response.data)['message'], "enter valid text")
+        self.assertEquals(json.loads(response.data)['message'], "Enter a valid location")
 
     def test_Invalid_destination(self):
         '''
-        test invalid destination
+        test invalid destination location
         '''
         parcel_cred = {
             "sender":"john",
@@ -241,11 +242,11 @@ class TestParcels(TestCase):
              }
         )
         self.assertEquals(response.status_code, 401)
-        self.assertEquals(json.loads(response.data)['message'], "enter valid text")
+        self.assertEquals(json.loads(response.data)['message'], "Enter a valid location")
 
     def test_Invalid_parcel(self):
         '''
-        test invalid parcel name
+        test invalid parcel item
         '''
         parcel_cred = {
             "sender":"john",
@@ -263,11 +264,11 @@ class TestParcels(TestCase):
              }
         )
         self.assertEquals(response.status_code, 401)
-        self.assertEquals(json.loads(response.data)['message'], "enter valid text")
+        self.assertEquals(json.loads(response.data)['message'], "Enter a valid parcel item")
 
     def test_Invalid_recipient(self):
         '''
-        test invalid recipient
+        test invalid recipient name
         '''
         parcel_cred = {
             "sender":"john",
@@ -285,18 +286,19 @@ class TestParcels(TestCase):
              }
         )
         self.assertEquals(response.status_code, 401)
-        self.assertEquals(json.loads(response.data)['message'], "enter valid text")
+        self.assertEquals(json.loads(response.data)['message'], "Enter a valid recipient name")
 
 
-    def test_Invalid_weight(self):
+
+    def test_Invalid_sender(self):
         '''
-        test invalid weight
+        test invalid sender name
         '''
         parcel_cred = {
-            "sender":"john",
+            "sender":"*&^%%$",
             "_from":'thika',
             "destination":"juja",
-            "weight":'hasdfg',
+            "weight":10,
             "parcel":"laptop",
             "recipient":"receiver"
         }
@@ -307,16 +309,16 @@ class TestParcels(TestCase):
                 'content-type': 'application/json'
              }
         )
-
         self.assertEquals(response.status_code, 401)
-        self.assertEquals(json.loads(response.data)['message'], "Enter a valid weight")
+        self.assertEquals(json.loads(response.data)['message'], "Enter a valid sender name")
+
 
     def test_get_all_parcels(self):
         '''
         test get all parcels
         '''
-        self.create_parcel()
 
+        self.create_parcel()
         response = self.client.get(
             "/api/v1/parcels"
         )
@@ -388,3 +390,4 @@ class TestParcels(TestCase):
         )
         self.assertEquals(response.status_code, 404)
         self.assertEquals(json.loads(response.data)['message'], 'User not found')
+
