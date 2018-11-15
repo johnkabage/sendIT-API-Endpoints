@@ -1,47 +1,72 @@
 from flask import request
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 from ..models import ParcelOrder, parcels_store
 from validators.validators import Validators
 
 class Parcel(Resource):
+    parser = reqparse.RequestParser()
+
+    parser.add_argument('sender', type=str, required=True,
+                        help='This field cannot be left blank')
+    parser.add_argument('_from', type=str, required=True,
+                        help='This field cannot be left blank')
+    parser.add_argument('destination', type=str, required=True,
+                        help='This field cannot be left blank')
+    parser.add_argument('weight', type=int, required=True,
+                        help='This field cannot be left blank')
+    parser.add_argument('parcel', type=str, required=True,
+                        help='This field cannot be left blank')
+    parser.add_argument('recipient', type=str, required=True,
+                        help='This field cannot be left blank')
+
 
     def post(self):
         '''
-        creating a pacel
+        creating a parcel
         '''
-        request_data = request.get_json()
+        request_data = Parcel.parser.parse_args()
+
+        sender = request_data['sender']
         _from = request_data['_from']
         destination = request_data['destination']
         weight = request_data['weight']
         parcel = request_data['parcel']
         recipient = request_data['recipient']
         price = (weight * 10)
-        sender = request_data['sender']
+
+        if not sender:
+            return {"message":"This field is reuired"},400
 
         if not Validators().valid_inputs(_from):
             return {
-                'message':"enter valid text"
+                'message':"Enter a valid location"
             }, 401
 
         if not Validators().valid_inputs(destination):
             return {
-                'message':"enter valid text"
+                'message':"Enter a valid location"
             }, 401
 
         if not Validators().valid_inputs(parcel):
             return {
-                'message':"enter valid text"
+                'message':"Enter a valid parcel item"
             }, 401
 
         if not Validators().valid_inputs(recipient):
             return {
-                'message':"enter valid text"
+                'message':"Enter a valid recipient name"
             }, 401
 
         if type(weight) != int:
             return {
-                'message':'Enter a valid weight'
+                'message':'Enter a valid number'
             }, 401
+
+        if not Validators().valid_inputs(sender):
+            return {
+                'message':"Enter a valid sender name"
+            }, 401
+
 
         parcel = ParcelOrder(sender, _from, destination, weight, parcel, recipient, price)
         parcels_store.append(parcel)
