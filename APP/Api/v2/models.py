@@ -1,11 +1,26 @@
 from werkzeug.security import generate_password_hash
 from datetime import datetime
-users_store = []
-parcels_store = []
+import psycogg2
+from flask import current_app
+
+
+class SendItConnectDB:
+    def __init__(self):
+        try:
+            self.conn = psycopg2.connect(
+                current_app.config.get('DATABASE_URL'))
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+
+    def init_app(self, app):
+        self.conn = psycopg2.connect(app.config.get('DATABASE_URL'))
+
+
 
 class ParcelOrder:
     parcel_id = 1
-    def __init__(self,sender = None, _from = None,destination = None,weight = None, parcel = None, recipient = None, price=None):
+    def __init__(self,sender=None, _from = None,destination = None,weight = None, parcel = None, recipient = None, price=None):
         self.sender = sender
         self._from = _from
         self.destination = destination
@@ -24,18 +39,19 @@ class ParcelOrder:
                 return parcel
 
     def get_parcels_by_sender(self, sender):
-        parcels_sender = [parcel for parcel in parcels_store if parcel.sender == sender]
-        return parcels_sender
+        pacels_sender = [parcel for parcel in parcels_store if parcel.sender == sender]
+        return pacels_sender
 
 class User:
     user_id = 1
-    def __init__(self, username = None, email =None, password = None, confirm_password=None):
+    def __init__(self, username = None, email =None, password = None, confirm_password=None, is_admin=False):
         self.username = username
         self.email = email
         if password:
             self.password = generate_password_hash(password)
         if confirm_password:
             self.confirm_password = generate_password_hash(confirm_password)
+        self.is_admin = is_admin
         self.id = User.user_id
 
         User.user_id += 1

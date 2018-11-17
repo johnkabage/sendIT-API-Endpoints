@@ -1,36 +1,20 @@
 from flask import request
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
+from flask_jwt_extended import create_access_token
 from werkzeug.security import check_password_hash
 from ..models import User, users_store
 from validators.validators import Validators
 
 class SignUp(Resource):
-
-    parser = reqparse.RequestParser()
-    parser.add_argument('username', type=str, required=True,
-                        help='This field cannot be left blank')
-    parser.add_argument('email', type=str, required=True,
-                        help='This field cannot be left blank')
-    parser.add_argument('password', type=str, required=True,
-                        help='This field cannot be left blank')
-    parser.add_argument('confirm_password', type=str, required=True,
-                        help='This field cannot be left blank')
-
     def post(self):
         '''
         user can signup
         '''
-        request_data = SignUp.parser.parse_args()
+        request_data = request.get_json()
         username = request_data['username']
         email = request_data['email']
         password = request_data['password']
         confirm_password = request_data['confirm_password']
-
-
-        # if  User().get_user_by_username(username):
-        #     return {
-        #         "message":f"User with username {username} already exists"
-        #     }
 
         if not Validators().valid_username(username):
             return {
@@ -50,7 +34,7 @@ class SignUp(Resource):
         if password != confirm_password:
             return {
                 'message':'password does not match'
-            }, 200
+            }, 401
 
         user = User(username, email, password, confirm_password)
 
@@ -61,18 +45,11 @@ class SignUp(Resource):
         }, 201
 
 class Login(Resource):
-
-    parser = reqparse.RequestParser()
-
-    parser.add_argument('username', type=str, required=True,
-                        help='This field cannot be left blank')
-    parser.add_argument('password', type=str, required=True,
-                        help='This field cannot be left blank')
     def post(self):
         '''
         user can login
         '''
-        request_data = Login.parser.parse_args()
+        request_data = request.get_json()
 
         username = request_data['username']
         password = request_data['password']
@@ -98,6 +75,9 @@ class Login(Resource):
                 'message':'Invalid password, enter the correct password'
             }, 401
 
+        token = create_access_token(identity=user.__dict__)
+
         return {
+            'token':token,
             'message':f'successfully logged in as {user.username}'
         }
