@@ -134,7 +134,7 @@ class TestParcels(TestCase):
             data=json.dumps(sigup_cred),
             headers={'content-type': 'application/json'}
         )
-        self.assertEquals(response.status_code, 401)
+        self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.data)['message'], "password does not match")
 
     def test_user_does_not_exist(self):
@@ -309,8 +309,8 @@ class TestParcels(TestCase):
                 'content-type': 'application/json'
              }
         )
-        self.assertEquals(response.status_code, 401)
-        self.assertEquals(json.loads(response.data)['message'], "Enter a valid sender name")
+        self.assertEquals(response.status_code, 400)
+        self.assertEquals(json.loads(response.data)['message'], "invalid sender in field")
 
 
     def test_get_all_parcels(self):
